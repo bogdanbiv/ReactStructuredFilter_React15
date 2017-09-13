@@ -1,0 +1,30 @@
+{
+  "name": "react-structured-filter-app",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-scripts": "1.0.13",
+
+    "es6-promise": "*",
+    "fuzzy": "^0.1.0",
+    "tether": "*",
+
+    "griddle-callback": "0.2.0",
+    "griddle-react": "0.2.4",
+    "moment": "*",
+    "react-async": "^2.0.1",
+    "react-bootstrap": "*",
+    "react-onclickoutside": "*"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "prettier": "^1.6.1"
+  }
+}
