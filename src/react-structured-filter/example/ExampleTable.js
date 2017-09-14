@@ -1,18 +1,17 @@
-var React = require('react');
-var Griddle = require('griddle-react');
-var GriddleWithCallback = require('./GriddleWithCallback.jsx');
-var StructuredFilter = require('../main.js');
+import React, { Component } from 'react';
+import GriddleWithCallback from './GriddleWithCallback.js';
+import StructuredFilter from '../main.js';
 
-var ExampleData = require('./ExampleData.jsx');
+import ExampleData from './ExampleData.js';
 
-var ExampleTable = React.createClass({
-  getInitialState: function() {
+class ExampleTable extends Component {
+  getInitialState() {
     return {
       filter: '',
     };
-  },
+  }
 
-  getJsonData: function(
+  getJsonData(
     filterString,
     sortColumn,
     sortAscending,
@@ -20,12 +19,11 @@ var ExampleTable = React.createClass({
     pageSize,
     callback
   ) {
-    let thisComponent = this;
-
-    if (filterString == undefined) {
+    if (filterString === undefined) {
       filterString = '';
     }
-    if (sortColumn == undefined) {
+
+    if (sortColumn === undefined) {
       sortColumn = '';
     }
 
@@ -38,26 +36,26 @@ var ExampleTable = React.createClass({
       pageSize
     );
     callback(results);
-  },
+  }
 
-  updateFilter: function(filter) {
+  updateFilter(filter) {
     // Set our filter to json data of the current filter tokens
     this.setState({ filter: JSON.stringify(filter) });
-  },
+  }
 
-  getSymbolOptions: function() {
+  getSymbolOptions() {
     return this.ExampleData.getSymbolOptions();
-  },
+  }
 
-  getSectorOptions: function() {
+  getSectorOptions() {
     return this.ExampleData.getSectorOptions();
-  },
+  }
 
-  getIndustryOptions: function() {
+  getIndustryOptions() {
     return this.ExampleData.getIndustryOptions();
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <div>
         <StructuredFilter
@@ -106,6 +104,8 @@ var ExampleTable = React.createClass({
         />
       </div>
     );
-  },
-});
-module.exports = ExampleTable;
+  }
+}
+
+export default ExampleTable;
+

@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './css/griddle.css';
 import './css/style.css';
 
-import ExampleTable from './react-structured-filter/example/ExampleTable.jsx';
+import ExampleTable from './react-structured-filter/example/ExampleTable.js';
 
 class App extends Component {
   render() {

@@ -1,98 +1,98 @@
-var React = require('react');
-var moment = require('moment');
+import React, { Component } from 'react';
+import moment from 'moment';
+import DateUtil from './util/date.js';
+import PropTypes from 'prop-types';
 
-var DateUtil = require('./util/date');
+class DateInput extends Component {
+  propTypes = {
+    onKeyDown: PropTypes.func,
+  };
 
-var DateInput = React.createClass({
-  propTypes: {
-    onKeyDown: React.PropTypes.func
-  },
-
-  getDefaultProps: function() {
+  getDefaultProps() {
     return {
-      dateFormat: 'YYYY-MM-DD'
+      dateFormat: 'YYYY-MM-DD',
     };
-  },
+  }
 
-  getInitialState: function() {
+  getInitialState() {
     return {
-      value: this.safeDateFormat(this.props.date)
+      value: this.safeDateFormat(this.props.date),
     };
-  },
+  }
 
-  componentDidMount: function() {
+  componentDidMount() {
     this.toggleFocus(this.props.focus);
-  },
+  }
 
-  componentWillReceiveProps: function(newProps) {
+  componentWillReceiveProps(newProps) {
     this.toggleFocus(newProps.focus);
 
     this.setState({
-      value: this.safeDateFormat(newProps.date)
+      value: this.safeDateFormat(newProps.date),
     });
-  },
+  }
 
-  toggleFocus: function(focus) {
+  toggleFocus(focus) {
     if (focus) {
       this.refs.entry.focus();
     } else {
       this.refs.entry.blur();
     }
-  },
+  }
 
-  handleChange: function(event) {
-    var date = moment(event.target.value, this.props.dateFormat, true);
-
+  handleChange(event) {
     this.setState({
-      value: event.target.value
+      value: event.target.value,
     });
-  },
+  }
 
-  safeDateFormat: function(date) {
-    return !! date ? date.format(this.props.dateFormat) : null;
-  },
+  safeDateFormat(date) {
+    return !!date ? date.format(this.props.dateFormat) : null;
+  }
 
-  isValueAValidDate: function(event) {
+  isValueAValidDate(event) {
     var date = moment(event.target.value, this.props.dateFormat, true);
 
     return date.isValid();
-  },
+  }
 
-  handleEnter: function(event) {
+  handleEnter(event) {
     if (this.isValueAValidDate()) {
       var date = moment(event.target.value, this.props.dateFormat, true);
       this.props.setSelected(new DateUtil(date));
     }
-  },
+  }
 
-  handleKeyDown: function(event) {
-    switch(event.key) {
-    case "Enter":
+  handleKeyDown(event) {
+    if (event.key === 'Enter') {
       event.preventDefault();
       this.handleEnter(event);
-      break;
-    case "Backspace":
-      this.props.onKeyDown(event);
-      break;
     }
-  },
 
-  handleClick: function(event) {
-    this.props.handleClick(event);
-  },
-
-  render: function() {
-    return <input
-      ref="entry"
-      type="text"
-      value={this.state.value}
-      onClick={this.handleClick}
-      onKeyDown={this.handleKeyDown}
-      onFocus={this.props.onFocus}
-      onChange={this.handleChange}
-      className="datepicker__input"
-      placeholder={this.props.placeholderText} />;
+    if (event.key === 'Backspace') {
+      this.props.onKeyDown(event);
+    }
   }
-});
 
-module.exports = DateInput;
+  handleClick(event) {
+    this.props.handleClick(event);
+  }
+
+  render() {
+    return (
+      <input
+        ref="entry"
+        type="text"
+        value={this.state.value}
+        onClick={this.handleClick}
+        onKeyDown={this.handleKeyDown}
+        onFocus={this.props.onFocus}
+        onChange={this.handleChange}
+        className="datepicker__input"
+        placeholder={this.props.placeholderText}
+      />
+    );
+  }
+}
+
+export default DateInput;

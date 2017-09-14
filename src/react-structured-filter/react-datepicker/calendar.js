@@ -1,58 +1,54 @@
-var React = require('react');
+import React, { Component } from 'react';
+import Day from './day.js';
+import DateUtil from './util/date.js';
+import moment from 'moment';
+import ReactOnClickOutside from 'react-onclickoutside';
 
-var Day = require('./day');
-var DateUtil = require('./util/date');
-var moment = require('moment');
+class Calendar extends Component {
+  mixins = [ReactOnClickOutside];
 
-var Calendar = React.createClass({
-  mixins: [require('react-onclickoutside')],
-
-  handleClickOutside: function() {
+  handleClickOutside() {
     this.props.hideCalendar();
-  },
+  }
 
-  getInitialState: function() {
+  getInitialState() {
     return {
-      date: new DateUtil(this.props.selected).safeClone(moment())
+      date: new DateUtil(this.props.selected).safeClone(moment()),
     };
-  },
+  }
 
-  increaseMonth: function() {
+  increaseMonth() {
     this.setState({
-      date: this.state.date.addMonth()
+      date: this.state.date.addMonth(),
     });
-  },
+  }
 
-  decreaseMonth: function() {
+  decreaseMonth() {
     this.setState({
-      date: this.state.date.subtractMonth()
+      date: this.state.date.subtractMonth(),
     });
-  },
+  }
 
-  weeks: function() {
+  weeks() {
     return this.state.date.mapWeeksInMonth(this.renderWeek);
-  },
+  }
 
-  handleDayClick: function(day) {
+  handleDayClick(day) {
     this.props.onSelect(day);
-  },
+  }
 
-  renderWeek: function(weekStart, key) {
-    if(! weekStart.weekInMonth(this.state.date)) {
+  renderWeek(weekStart, key) {
+    if (!weekStart.weekInMonth(this.state.date)) {
       return;
     }
 
-    return (
-      <div key={key}>
-        {this.days(weekStart)}
-      </div>
-    );
-  },
+    return <div key={key}>{this.days(weekStart)}</div>;
+  }
 
-  renderDay: function(day, key) {
+  renderDay(day, key) {
     var minDate = new DateUtil(this.props.minDate).safeClone(),
-        maxDate = new DateUtil(this.props.maxDate).safeClone(),
-        disabled = day.isBefore(minDate) || day.isAfter(maxDate);
+      maxDate = new DateUtil(this.props.maxDate).safeClone(),
+      disabled = day.isBefore(minDate) || day.isAfter(maxDate);
 
     return (
       <Day
@@ -61,28 +57,31 @@ var Calendar = React.createClass({
         date={this.state.date}
         onClick={this.handleDayClick.bind(this, day)}
         selected={new DateUtil(this.props.selected)}
-        disabled={disabled} />
+        disabled={disabled}
+      />
     );
-  },
+  }
 
-  days: function(weekStart) {
+  days(weekStart) {
     return weekStart.mapDaysInWeek(this.renderDay);
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <div className="datepicker">
-        <div className="datepicker__triangle"></div>
+        <div className="datepicker__triangle" />
         <div className="datepicker__header">
-          <a className="datepicker__navigation datepicker__navigation--previous"
-              onClick={this.decreaseMonth}>
-          </a>
+          <a
+            className="datepicker__navigation datepicker__navigation--previous"
+            onClick={this.decreaseMonth}
+          />
           <span className="datepicker__current-month">
-            {this.state.date.format("MMMM YYYY")}
+            {this.state.date.format('MMMM YYYY')}
           </span>
-          <a className="datepicker__navigation datepicker__navigation--next"
-              onClick={this.increaseMonth}>
-          </a>
+          <a
+            className="datepicker__navigation datepicker__navigation--next"
+            onClick={this.increaseMonth}
+          />
           <div>
             <div className="datepicker__day">Mo</div>
             <div className="datepicker__day">Tu</div>
@@ -93,12 +92,9 @@ var Calendar = React.createClass({
             <div className="datepicker__day">Su</div>
           </div>
         </div>
-        <div className="datepicker__month">
-          {this.weeks()}
-        </div>
+        <div className="datepicker__month">{this.weeks()}</div>
       </div>
     );
   }
-});
-
-module.exports = Calendar;
+}
+export default Calendar;

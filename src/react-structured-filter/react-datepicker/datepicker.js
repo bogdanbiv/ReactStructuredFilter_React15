@@ -1,50 +1,50 @@
-var React = require('react');
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-var Popover   = require('./popover');
-var DateUtil  = require('./util/date');
-var Calendar  = require('./calendar');
-var DateInput = require('./date_input');
+import Popover from './popover.js';
+import Calendar from './calendar.js';
+import DateInput from './date_input.js';
 
-var DatePicker = React.createClass({
-  propTypes: {
-    onChange: React.PropTypes.func,
-    onKeyDown: React.PropTypes.func
-  },
+class DatePicker extends Component {
+  propTypes = {
+    onChange: PropTypes.func,
+    onKeyDown: PropTypes.func,
+  };
 
-  getInitialState: function() {
+  getInitialState() {
     return {
-      focus: true
+      focus: true,
     };
-  },
+  }
 
-  handleFocus: function() {
+  handleFocus() {
     this.setState({
-      focus: true
+      focus: true,
     });
-  },
+  }
 
-  hideCalendar: function() {
-      this.setState({
-        focus: false
-      });
-  },
+  hideCalendar() {
+    this.setState({
+      focus: false,
+    });
+  }
 
-  handleSelect: function(date) {
+  handleSelect(date) {
     this.hideCalendar();
     this.setSelected(date);
-  },
+  }
 
-  setSelected: function(date) {
+  setSelected(date) {
     this.props.onChange(date.moment());
-  },
+  }
 
-  onInputClick: function() {
+  onInputClick() {
     this.setState({
-      focus: true
+      focus: true,
     });
-  },
+  }
 
-  calendar: function() {
+  calendar() {
     if (this.state.focus) {
       return (
         <Popover>
@@ -53,13 +53,14 @@ var DatePicker = React.createClass({
             onSelect={this.handleSelect}
             hideCalendar={this.hideCalendar}
             minDate={this.props.minDate}
-            maxDate={this.props.maxDate} />
+            maxDate={this.props.maxDate}
+          />
         </Popover>
       );
     }
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <div>
         <DateInput
@@ -73,11 +74,12 @@ var DatePicker = React.createClass({
           handleEnter={this.hideCalendar}
           setSelected={this.setSelected}
           hideCalendar={this.hideCalendar}
-          placeholderText={this.props.placeholderText} />
+          placeholderText={this.props.placeholderText}
+        />
         {this.calendar()}
       </div>
     );
   }
-});
+}
 
-module.exports = DatePicker;
+export default DatePicker;

@@ -1,9 +1,12 @@
-var React = window.React || require('react');
-var TypeaheadSelector = require('./selector');
-var KeyEvent = require('../keyevent');
-var fuzzy = require('fuzzy');
-var DatePicker = require('../../react-datepicker/datepicker.js');
-var moment = require('moment');
+import PropTypes from 'prop-types';
+import React, { Component} from 'react';
+import TypeaheadSelector from './selector.js';
+import KeyEvent from '../keyevent.js';
+import fuzzy from 'fuzzy';
+import DatePicker from '../../react-datepicker/datepicker.js';
+import moment from 'moment';
+
+import ReactOnClickOutside from 'react-onclickoutside';
 
 /**
  * A "typeahead", an auto-completing text input
@@ -11,24 +14,24 @@ var moment = require('moment');
  * Renders an text input that shows options nearby that you can use the
  * keyboard or mouse to select.  Requires CSS for MASSIVE DAMAGE.
  */
-var Typeahead = React.createClass({
-  propTypes: {
-    customClasses: React.PropTypes.object,
-    maxVisible: React.PropTypes.number,
-    options: React.PropTypes.array,
-    header: React.PropTypes.string,
-    datatype: React.PropTypes.string,
-    defaultValue: React.PropTypes.string,
-    placeholder: React.PropTypes.string,
-    onOptionSelected: React.PropTypes.func,
-    onKeyDown: React.PropTypes.func
-  },
+class Typeahead extends Component {
+  propTypes = {
+    customClasses: PropTypes.object,
+    maxVisible: PropTypes.number,
+    options: PropTypes.array,
+    header: PropTypes.string,
+    datatype: PropTypes.string,
+    defaultValue: PropTypes.string,
+    placeholder: PropTypes.string,
+    onOptionSelected: PropTypes.func,
+    onKeyDown: PropTypes.func
+  }
 
-  mixins: [
-    require('react-onclickoutside')
-  ],
+  mixins= [
+      ReactOnClickOutside
+  ]
 
-  getDefaultProps: function() {
+  getDefaultProps() {
     return {
       options: [],
       header: "Category",
@@ -39,9 +42,9 @@ var Typeahead = React.createClass({
       onKeyDown: function(event) { return },
       onOptionSelected: function(option) { }
     };
-  },
+  }
 
-  getInitialState: function() {
+  getInitialState() {
     return {
       // The set of all options... Does this need to be state?  I guess for lazy load...
       options: this.props.options,
@@ -59,16 +62,16 @@ var Typeahead = React.createClass({
       // A valid typeahead value
       selection: null
     };
-  },
+  }
 
-  componentWillReceiveProps: function(nextProps) {
+  componentWillReceiveProps(nextProps) {
     this.setState({options: nextProps.options,
       header: nextProps.header,
       datatype: nextProps.datatype,
       visible: nextProps.options});
-  },
+  }
 
-  getOptionsForValue: function(value, options) {
+  getOptionsForValue(value, options) {
     var result = fuzzy.filter(value, options).map(function(res) {
       return res.string;
     });
@@ -77,16 +80,16 @@ var Typeahead = React.createClass({
       result = result.slice(0, this.props.maxVisible);
     }
     return result;
-  },
+  }
 
-  setEntryText: function(value) {
+  setEntryText(value) {
     if (this.refs.entry != null) {
       this.refs.entry.value = value;
     }
     this._onTextEntryUpdated();
-  },
+  }
 
-  _renderIncrementalSearchResults: function() {
+  _renderIncrementalSearchResults() {
     if (!this.state.focused) {
       return "";
     }
@@ -107,9 +110,9 @@ var Typeahead = React.createClass({
         onOptionSelected={ this._onOptionSelected }
         customClasses={this.props.customClasses} />
     );
-  },
+  }
 
-  _onOptionSelected: function(option) {
+  _onOptionSelected(option) {
     var nEntry = this.refs.entry;
     nEntry.focus();
     nEntry.value = option;
@@ -118,9 +121,9 @@ var Typeahead = React.createClass({
                    entryValue: option});
 
     this.props.onOptionSelected(option);
-  },
+  }
 
-  _onTextEntryUpdated: function() {
+  _onTextEntryUpdated() {
     var value = "";
     if (this.refs.entry != null) {
       value = this.refs.entry.value;
@@ -128,27 +131,27 @@ var Typeahead = React.createClass({
     this.setState({visible: this.getOptionsForValue(value, this.state.options),
                    selection: null,
                    entryValue: value});
-  },
+  }
 
-  _onEnter: function(event) {
+  _onEnter(event) {
     if (!this.refs.sel.state.selection) {
       return this.props.onKeyDown(event);
     }
 
     this._onOptionSelected(this.refs.sel.state.selection);
-  },
+  }
 
-  _onEscape: function() {
+  _onEscape() {
     this.refs.sel.setSelectionIndex(null)
-  },
+  }
 
-  _onTab: function(event) {
+  _onTab(event) {
     var option = this.refs.sel.state.selection ?
       this.refs.sel.state.selection : this.state.visible[0];
     this._onOptionSelected(option)
-  },
+  }
 
-  eventMap: function(event) {
+  eventMap(event) {
     var events = {};
 
     events[KeyEvent.DOM_VK_UP] = this.refs.sel.navUp;
@@ -158,9 +161,9 @@ var Typeahead = React.createClass({
     events[KeyEvent.DOM_VK_TAB] = this._onTab;
 
     return events;
-  },
+  }
 
-  _onKeyDown: function(event) {
+  _onKeyDown(event) {
     // If Enter pressed
     if (event.keyCode === KeyEvent.DOM_VK_RETURN || event.keyCode === KeyEvent.DOM_VK_ENTER) {
       // If no options were provided so we can match on anything
@@ -189,47 +192,49 @@ var Typeahead = React.createClass({
     }
     // Don't propagate the keystroke back to the DOM/browser
     event.preventDefault();
-  },
+  }
 
-  _onFocus: function(event) {
+  _onFocus(event) {
     this.setState({focused: true});
-  },
+  }
 
-  handleClickOutside: function(event) {
+  handleClickOutside(event) {
     this.setState({focused:false});
-  },
+  }
 
-  isDescendant: function(parent, child) {
+  isDescendant(parent, child) {
      var node = child.parentNode;
      while (node != null) {
-         if (node == parent) {
+         if (node === parent) {
              return true;
          }
+
          node = node.parentNode;
      }
      return false;
-  },
+  }
 
-  _handleDateChange: function(date) {
+  _handleDateChange(date) {
     this.props.onOptionSelected(date.format("YYYY-MM-DD"));
-  },
+  }
 
-  _showDatePicker: function() {
-    if (this.state.datatype == "date") {
+  _showDatePicker() {
+    if (this.state.datatype === "date") {
       return true;
     }
-    return false;
-  },
 
-  inputRef: function() {
+    return false;
+  }
+
+  inputRef() {
     if (this._showDatePicker()) {
       return this.refs.datepicker.refs.dateinput.refs.entry;
     } else {
       return this.refs.entry;
     }
-  },
+  }
 
-  render: function() {
+  render() {
     var inputClasses = {}
     inputClasses[this.props.customClasses.input] = !!this.props.customClasses.input;
 
@@ -257,6 +262,6 @@ var Typeahead = React.createClass({
       </span>
     );
   }
-});
+};
 
-module.exports = Typeahead;
+export default Typeahead;

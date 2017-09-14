@@ -1,57 +1,59 @@
-var React = window.React || require('react');
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 /**
  * A single option within the TypeaheadSelector
  */
-var TypeaheadOption = React.createClass({
-  propTypes: {
-    customClasses: React.PropTypes.object,
-    onClick: React.PropTypes.func,
-    children: React.PropTypes.string
-  },
+class TypeaheadOption extends Component {
+  propTypes = {
+    customClasses: PropTypes.object,
+    onClick: PropTypes.func,
+    children: PropTypes.string,
+  };
 
-  getDefaultProps: function() {
+  getDefaultProps() {
     return {
       customClasses: {},
-      onClick: function(event) { 
-        event.preventDefault(); 
-      }
+      onClick: function(event) {
+        event.preventDefault();
+      },
     };
-  },
+  }
 
-  getInitialState: function() {
+  getInitialState() {
     return {
-      hover: false
+      hover: false,
     };
-  },
+  }
 
-  render: function() {
+  render() {
     var classes = {
-      hover: this.props.hover
-    }
-    classes[this.props.customClasses.listItem] = !!this.props.customClasses.listItem;
+      hover: this.props.hover,
+    };
+    classes[this.props.customClasses.listItem] = !!this.props.customClasses
+      .listItem;
 
     return (
       <li className={classes} onClick={this._onClick}>
         <a href="#" className={this._getClasses()} ref="anchor">
-          { this.props.children }
+          {this.props.children}
         </a>
       </li>
     );
-  },
+  }
 
-  _getClasses: function() {
+  _getClasses() {
     var classes = {
-      "typeahead-option": true,
+      'typeahead-option': true,
     };
-    classes[this.props.customClasses.listAnchor] = !!this.props.customClasses.listAnchor;
+    classes[this.props.customClasses.listAnchor] = !!this.props.customClasses
+      .listAnchor;
     return classes;
-  },
+  }
 
-  _onClick: function() {
+  _onClick() {
     return this.props.onClick();
   }
-});
+}
 
-
-module.exports = TypeaheadOption;
+export default TypeaheadOption;

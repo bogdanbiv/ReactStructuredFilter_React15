@@ -1,85 +1,93 @@
-var React = window.React || require('react');
-var TypeaheadOption = require('./option');
+import TypeaheadOption from './option.js';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 /**
  * Container for the options rendered as part of the autocompletion process
  * of the typeahead
  */
-var TypeaheadSelector = React.createClass({
-  propTypes: {
-    options: React.PropTypes.array,
-    header: React.PropTypes.string,
-    customClasses: React.PropTypes.object,
-    selectionIndex: React.PropTypes.number,
-    onOptionSelected: React.PropTypes.func
-  },
+class TypeaheadSelector extends Component {
+  propTypes = {
+    options: PropTypes.array,
+    header: PropTypes.string,
+    customClasses: PropTypes.object,
+    selectionIndex: PropTypes.number,
+    onOptionSelected: PropTypes.func,
+  };
 
-  getDefaultProps: function() {
+  getDefaultProps() {
     return {
       selectionIndex: null,
       customClasses: {},
-      onOptionSelected: function(option) { }
+      onOptionSelected: function(option) {},
     };
-  },
+  }
 
-  getInitialState: function() {
+  getInitialState() {
     return {
       selectionIndex: this.props.selectionIndex,
-      selection: this.getSelectionForIndex(this.props.selectionIndex)
+      selection: this.getSelectionForIndex(this.props.selectionIndex),
     };
-  },
+  }
 
-  componentWillReceiveProps: function(nextProps) {
-    this.setState({selectionIndex: null});
-  },
+  componentWillReceiveProps(nextProps) {
+    this.setState({ selectionIndex: null });
+  }
 
-  render: function() {
+  render() {
     var classes = {
-      "typeahead-selector": true
+      'typeahead-selector': true,
     };
-    classes[this.props.customClasses.results] = this.props.customClasses.results;
+    classes[
+      this.props.customClasses.results
+    ] = this.props.customClasses.results;
 
     var results = this.props.options.map(function(result, i) {
       return (
-        <TypeaheadOption ref={result} key={result}
+        <TypeaheadOption
+          ref={result}
+          key={result}
           hover={this.state.selectionIndex === i}
           customClasses={this.props.customClasses}
           onClick={this._onClick.bind(this, result)}>
-          { result }
+          {result}
         </TypeaheadOption>
       );
     }, this);
-    return <ul className={classes}>
-      <li className="header">{this.props.header}</li>
-        { results }
-      </ul>;
-  },
+    return (
+      <ul className={classes}>
+        <li className="header">{this.props.header}</li>
+        {results}
+      </ul>
+    );
+  }
 
-  setSelectionIndex: function(index) {
+  setSelectionIndex(index) {
     this.setState({
       selectionIndex: index,
       selection: this.getSelectionForIndex(index),
     });
-  },
+  }
 
-  getSelectionForIndex: function(index) {
+  getSelectionForIndex(index) {
     if (index === null) {
       return null;
     }
+
     return this.props.options[index];
-  },
+  }
 
-  _onClick: function(result) {
+  _onClick(result) {
     this.props.onOptionSelected(result);
-  },
+  }
 
-  _nav: function(delta) {
+  _nav(delta) {
     if (!this.props.options) {
       return;
     }
     var newIndex;
     if (this.state.selectionIndex === null) {
-      if (delta == 1) {
+      if (delta === 1) {
         newIndex = 0;
       } else {
         newIndex = delta;
@@ -93,18 +101,19 @@ var TypeaheadSelector = React.createClass({
       newIndex -= this.props.options.length;
     }
     var newSelection = this.getSelectionForIndex(newIndex);
-    this.setState({selectionIndex: newIndex,
-                   selection: newSelection});
-  },
-
-  navDown: function() {
-    this._nav(1);
-  },
-
-  navUp: function() {
-    this._nav(-1);
+    this.setState({
+      selectionIndex: newIndex,
+      selection: newSelection,
+    });
   }
 
-});
+  navDown() {
+    this._nav(1);
+  }
 
-module.exports = TypeaheadSelector;
+  navUp() {
+    this._nav(-1);
+  }
+}
+
+export default TypeaheadSelector;
