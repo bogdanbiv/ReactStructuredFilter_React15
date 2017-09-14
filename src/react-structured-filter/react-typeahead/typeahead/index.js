@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { Component} from 'react';
+import React, { Component } from 'react';
 import TypeaheadSelector from './selector.js';
 import KeyEvent from '../keyevent.js';
 import fuzzy from 'fuzzy';
@@ -15,7 +15,7 @@ import ReactOnClickOutside from 'react-onclickoutside';
  * keyboard or mouse to select.  Requires CSS for MASSIVE DAMAGE.
  */
 class Typeahead extends Component {
-  propTypes = {
+  static propTypes = {
     customClasses: PropTypes.object,
     maxVisible: PropTypes.number,
     options: PropTypes.array,
@@ -24,28 +24,44 @@ class Typeahead extends Component {
     defaultValue: PropTypes.string,
     placeholder: PropTypes.string,
     onOptionSelected: PropTypes.func,
-    onKeyDown: PropTypes.func
-  }
+    onKeyDown: PropTypes.func,
+  };
 
-  mixins= [
-      ReactOnClickOutside
-  ]
+  mixins = [ReactOnClickOutside];
 
-  getDefaultProps() {
-    return {
-      options: [],
-      header: "Category",
-      datatype: "text",
-      customClasses: {},
-      defaultValue: "",
-      placeholder: "",
-      onKeyDown: function(event) { return },
-      onOptionSelected: function(option) { }
-    };
-  }
+  defaultProps = {
+    options: [],
+    header: 'Category',
+    datatype: 'text',
+    customClasses: {},
+    defaultValue: '',
+    placeholder: '',
+    onKeyDown: function(event) {
+      return;
+    },
+    onOptionSelected: function(option) {},
+  };
 
-  getInitialState() {
-    return {
+  state = {
+    // The set of all options... Does this need to be state?  I guess for lazy load...
+    options: [],
+    header: [],
+    datatype: [],
+
+    focused: false,
+
+    // The currently visible set of options
+    visible: () => {},
+
+    // This should be called something else, "entryValue"
+    entryValue: () => {},
+
+    // A valid typeahead value
+    selection: null,
+  };
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
       // The set of all options... Does this need to be state?  I guess for lazy load...
       options: this.props.options,
       header: this.props.header,
@@ -54,21 +70,24 @@ class Typeahead extends Component {
       focused: false,
 
       // The currently visible set of options
-      visible: this.getOptionsForValue(this.props.defaultValue, this.props.options),
+      visible: this.getOptionsForValue(
+        this.props.defaultValue,
+        this.props.options
+      ),
 
       // This should be called something else, "entryValue"
       entryValue: this.props.defaultValue,
 
       // A valid typeahead value
-      selection: null
-    };
-  }
+      selection: null,
+    });
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({options: nextProps.options,
+    this.setState({
+      options: nextProps.options,
       header: nextProps.header,
       datatype: nextProps.datatype,
-      visible: nextProps.options});
+      visible: nextProps.options,
+    });
   }
 
   getOptionsForValue(value, options) {
@@ -91,24 +110,27 @@ class Typeahead extends Component {
 
   _renderIncrementalSearchResults() {
     if (!this.state.focused) {
-      return "";
+      return '';
     }
 
     // Something was just selected
     if (this.state.selection) {
-      return "";
+      return '';
     }
 
     // There are no typeahead / autocomplete suggestions
     if (!this.state.visible.length) {
-      return "";
+      return '';
     }
 
     return (
       <TypeaheadSelector
-        ref="sel" options={ this.state.visible } header={this.state.header}
-        onOptionSelected={ this._onOptionSelected }
-        customClasses={this.props.customClasses} />
+        ref="sel"
+        options={this.state.visible}
+        header={this.state.header}
+        onOptionSelected={this._onOptionSelected}
+        customClasses={this.props.customClasses}
+      />
     );
   }
 
@@ -116,21 +138,25 @@ class Typeahead extends Component {
     var nEntry = this.refs.entry;
     nEntry.focus();
     nEntry.value = option;
-    this.setState({visible: this.getOptionsForValue(option, this.state.options),
-                   selection: option,
-                   entryValue: option});
+    this.setState({
+      visible: this.getOptionsForValue(option, this.state.options),
+      selection: option,
+      entryValue: option,
+    });
 
     this.props.onOptionSelected(option);
   }
 
   _onTextEntryUpdated() {
-    var value = "";
+    var value = '';
     if (this.refs.entry != null) {
       value = this.refs.entry.value;
     }
-    this.setState({visible: this.getOptionsForValue(value, this.state.options),
-                   selection: null,
-                   entryValue: value});
+    this.setState({
+      visible: this.getOptionsForValue(value, this.state.options),
+      selection: null,
+      entryValue: value,
+    });
   }
 
   _onEnter(event) {
@@ -142,13 +168,14 @@ class Typeahead extends Component {
   }
 
   _onEscape() {
-    this.refs.sel.setSelectionIndex(null)
+    this.refs.sel.setSelectionIndex(null);
   }
 
   _onTab(event) {
-    var option = this.refs.sel.state.selection ?
-      this.refs.sel.state.selection : this.state.visible[0];
-    this._onOptionSelected(option)
+    var option = this.refs.sel.state.selection
+      ? this.refs.sel.state.selection
+      : this.state.visible[0];
+    this._onOptionSelected(option);
   }
 
   eventMap(event) {
@@ -156,7 +183,9 @@ class Typeahead extends Component {
 
     events[KeyEvent.DOM_VK_UP] = this.refs.sel.navUp;
     events[KeyEvent.DOM_VK_DOWN] = this.refs.sel.navDown;
-    events[KeyEvent.DOM_VK_RETURN] = events[KeyEvent.DOM_VK_ENTER] = this._onEnter;
+    events[KeyEvent.DOM_VK_RETURN] = events[
+      KeyEvent.DOM_VK_ENTER
+    ] = this._onEnter;
     events[KeyEvent.DOM_VK_ESCAPE] = this._onEscape;
     events[KeyEvent.DOM_VK_TAB] = this._onTab;
 
@@ -165,9 +194,12 @@ class Typeahead extends Component {
 
   _onKeyDown(event) {
     // If Enter pressed
-    if (event.keyCode === KeyEvent.DOM_VK_RETURN || event.keyCode === KeyEvent.DOM_VK_ENTER) {
+    if (
+      event.keyCode === KeyEvent.DOM_VK_RETURN ||
+      event.keyCode === KeyEvent.DOM_VK_ENTER
+    ) {
       // If no options were provided so we can match on anything
-      if (this.props.options.length===0) {
+      if (this.props.options.length === 0) {
         this._onOptionSelected(this.state.entryValue);
       }
 
@@ -195,31 +227,31 @@ class Typeahead extends Component {
   }
 
   _onFocus(event) {
-    this.setState({focused: true});
+    this.setState({ focused: true });
   }
 
   handleClickOutside(event) {
-    this.setState({focused:false});
+    this.setState({ focused: false });
   }
 
   isDescendant(parent, child) {
-     var node = child.parentNode;
-     while (node != null) {
-         if (node === parent) {
-             return true;
-         }
+    var node = child.parentNode;
+    while (node != null) {
+      if (node === parent) {
+        return true;
+      }
 
-         node = node.parentNode;
-     }
-     return false;
+      node = node.parentNode;
+    }
+    return false;
   }
 
   _handleDateChange(date) {
-    this.props.onOptionSelected(date.format("YYYY-MM-DD"));
+    this.props.onOptionSelected(date.format('YYYY-MM-DD'));
   }
 
   _showDatePicker() {
-    if (this.state.datatype === "date") {
+    if (this.state.datatype === 'date') {
       return true;
     }
 
@@ -235,33 +267,44 @@ class Typeahead extends Component {
   }
 
   render() {
-    var inputClasses = {}
-    inputClasses[this.props.customClasses.input] = !!this.props.customClasses.input;
+    var inputClasses = {};
+    inputClasses[this.props.customClasses.input] = !!this.props.customClasses
+      .input;
 
     var classes = {
-      typeahead: true
-    }
+      typeahead: true,
+    };
     classes[this.props.className] = !!this.props.className;
 
     if (this._showDatePicker()) {
       return (
         <span ref="input" className={classes} onFocus={this._onFocus}>
-          <DatePicker ref="datepicker" dateFormat={"YYYY-MM-DD"} selected={moment()} onChange={this._handleDateChange} onKeyDown={this._onKeyDown}/>
+          <DatePicker
+            ref="datepicker"
+            dateFormat={'YYYY-MM-DD'}
+            selected={moment()}
+            onChange={this._handleDateChange}
+            onKeyDown={this._onKeyDown}
+          />
         </span>
       );
     }
 
     return (
       <span ref="input" className={classes} onFocus={this._onFocus}>
-        <input ref="entry" type="text"
+        <input
+          ref="entry"
+          type="text"
           placeholder={this.props.placeholder}
-          className={inputClasses} defaultValue={this.state.entryValue}
-          onChange={this._onTextEntryUpdated} onKeyDown={this._onKeyDown}
-          />
-        { this._renderIncrementalSearchResults() }
+          className={inputClasses}
+          defaultValue={this.state.entryValue}
+          onChange={this._onTextEntryUpdated}
+          onKeyDown={this._onKeyDown}
+        />
+        {this._renderIncrementalSearchResults()}
       </span>
     );
   }
-};
+}
 
 export default Typeahead;

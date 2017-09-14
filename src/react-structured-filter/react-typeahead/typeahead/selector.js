@@ -23,15 +23,18 @@ class TypeaheadSelector extends Component {
     };
   }
 
-  getInitialState() {
-    return {
-      selectionIndex: this.props.selectionIndex,
-      selection: this.getSelectionForIndex(this.props.selectionIndex),
-    };
-  }
+  state = {
+    selectionIndex: 0,
+    selection: {},
+  };
 
   componentWillReceiveProps(nextProps) {
     this.setState({ selectionIndex: null });
+
+    this.setState({
+      selectionIndex: this.props.selectionIndex,
+      selection: this.getSelectionForIndex(this.props.selectionIndex),
+    });
   }
 
   render() {

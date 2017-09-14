@@ -5,11 +5,7 @@ import StructuredFilter from '../main.js';
 import ExampleData from './ExampleData.js';
 
 class ExampleTable extends Component {
-  getInitialState() {
-    return {
-      filter: '',
-    };
-  }
+  state = { filter: '', ExampleData: [] };
 
   getJsonData(
     filterString,
@@ -26,6 +22,8 @@ class ExampleTable extends Component {
     if (sortColumn === undefined) {
       sortColumn = '';
     }
+
+      if (!this.ExampleData) return;
 
     // Normally you would make a Reqwest here to the server
     var results = this.ExampleData.filter(
@@ -108,4 +106,3 @@ class ExampleTable extends Component {
 }
 
 export default ExampleTable;
-

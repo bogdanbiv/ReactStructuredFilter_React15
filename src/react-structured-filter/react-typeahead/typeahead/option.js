@@ -20,11 +20,9 @@ class TypeaheadOption extends Component {
     };
   }
 
-  getInitialState() {
-    return {
-      hover: false,
-    };
-  }
+  state = {
+    hover: false,
+  };
 
   render() {
     var classes = {

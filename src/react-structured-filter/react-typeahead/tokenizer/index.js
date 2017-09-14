@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
  * by pressing backspace on the beginning of the line with the keyboard.
  */
 class TypeaheadTokenizer extends Component {
-  propTypes= {
+  static propTypes = {
     options: PropTypes.array,
     customClasses: PropTypes.object,
     defaultSelected: PropTypes.array,
@@ -18,27 +18,29 @@ class TypeaheadTokenizer extends Component {
     placeholder: PropTypes.string,
     onTokenRemove: PropTypes.func,
     onTokenAdd: PropTypes.func,
-  }
+  };
 
-  getInitialState() {
-    return {
+  componentWillReceiveProps() {
+    this.setState({
       selected: this.props.defaultSelected,
-      category: '',
-      operator: '',
-    };
+    });
   }
 
-  getDefaultProps() {
-    return {
-      options: [],
-      defaultSelected: [],
-      customClasses: {},
-      defaultValue: '',
-      placeholder: '',
-      onTokenAdd: function() {},
-      onTokenRemove: function() {},
-    };
-  }
+  state = {
+    selected: { map: () => {} },
+    category: '',
+    operator: '',
+  };
+
+  defaultProps = {
+    options: [],
+    defaultSelected: [],
+    customClasses: {},
+    defaultValue: '',
+    placeholder: '',
+    onTokenAdd: function() {},
+    onTokenRemove: function() {},
+  };
 
   // TODO: Support initialized tokens
   //
@@ -237,6 +239,6 @@ class TypeaheadTokenizer extends Component {
       </div>
     );
   }
-};
+}
 
 export default TypeaheadTokenizer;

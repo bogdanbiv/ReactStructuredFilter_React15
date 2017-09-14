@@ -11,10 +11,12 @@ class Calendar extends Component {
     this.props.hideCalendar();
   }
 
-  getInitialState() {
-    return {
+  state = { date: null };
+
+  componentWillReceiveProps() {
+    this.setState({
       date: new DateUtil(this.props.selected).safeClone(moment()),
-    };
+    });
   }
 
   increaseMonth() {

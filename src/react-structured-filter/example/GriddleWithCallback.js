@@ -33,30 +33,22 @@ var SettingsIconComponent = React.createElement(
 );
 
 class GriddleWithCallback extends Component {
-  getDefaultProps() {
-    return {
-      getExternalResults: null,
-      resultsPerPage: 10,
-      loadingComponent: null,
-      enableInfiniteScroll: false,
-      filter: '',
-    };
-  }
+  static defaultProps = {
+    getExternalResults: null,
+    resultsPerPage: 10,
+    loadingComponent: null,
+    enableInfiniteScroll: false,
+    filter: '',
+  };
 
-  getInitialState() {
-    var initial = {
-      results: [],
-      page: 0,
-      maxPage: 0,
-      sortColumn: null,
-      sortAscending: true,
-    };
-
-    // If we need to get external results, grab the results.
-    initial.isLoading = true; // Initialize to 'loading'
-
-    return initial;
-  }
+  state = {
+    results: [],
+    page: 0,
+    maxPage: 0,
+    sortColumn: null,
+    sortAscending: true,
+    isLoading: true,
+  };
 
   componentDidMount() {
     var state = this.state;
