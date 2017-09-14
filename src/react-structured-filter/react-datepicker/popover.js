@@ -1,5 +1,6 @@
-var React = require('react');
-var Tether = require('tether');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Tether from 'tether';
 
 
 var Popover = React.createClass({
@@ -34,7 +35,7 @@ var Popover = React.createClass({
   _tetherOptions: function() {
     return {
       element: this._popoverElement,
-      target: this.getDOMNode().parentElement,
+      target: ReactDOM.findDOMNode(this).parentElement,
       attachment: 'top left',
       targetAttachment: 'bottom left',
       targetOffset: '10px 0',
@@ -74,4 +75,4 @@ var Popover = React.createClass({
   }
 });
 
-module.exports = Popover;
+export default Popover;

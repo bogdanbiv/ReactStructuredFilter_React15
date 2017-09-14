@@ -120,7 +120,7 @@ var TypeaheadTokenizer = React.createClass({
 
     // Remove token ONLY when bksp pressed at beginning of line
     // without a selection
-    var entry = this.refs.typeahead.inputRef().getDOMNode();
+    var entry = this.refs.typeahead.inputRef();
     if (entry.selectionStart == entry.selectionEnd &&
         entry.selectionStart == 0)
     {
