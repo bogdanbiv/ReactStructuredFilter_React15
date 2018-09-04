@@ -1,9 +1,12 @@
-var React = require('react');
+import React from 'react';
+import ExampleData from './ExampleData.js';
+// import { ExampleData } from './ExampleData.js';
+
 var Griddle = require('griddle-react');
 var GriddleWithCallback = require('./GriddleWithCallback.jsx');
 var StructuredFilter = require('../main.js');
 
-var ExampleData = require('./ExampleData.jsx');
+
 
 var ExampleTable = React.createClass({
   getInitialState: function() {
@@ -108,4 +111,5 @@ var ExampleTable = React.createClass({
     );
   },
 });
-module.exports = ExampleTable;
+export default ExampleTable
+// module.exports = ExampleTable;

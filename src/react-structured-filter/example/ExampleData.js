@@ -1,5 +1,6 @@
-var React = require('react');
-var Taffy = require('./taffy-min.js').taffy;
+// var React = require('react');
+import React, { Component } from 'react';
+import Taffy from 'taffy'
 
 
 /*******************************************************************************
@@ -8,8 +9,8 @@ var Taffy = require('./taffy-min.js').taffy;
  * You should query a server.  This is purely for demo purposes.
  ******************************************************************************/
 
-var ExampleData = React.createClass({
-  componentWillMount: function() {
+class ExampleData extends Component {
+  componentWillMount() {
     this.props.myData(this);
     // Create instance variable of static data
     this.db = Taffy([
@@ -1261,9 +1262,9 @@ var ExampleData = React.createClass({
       {"Symbol":"ZUMZ", 	 "Name": "Zumiez Inc.", 	 "Price": 38.84, 	 "MarketCap": 1140000000, 	 "IPO":2005, 		 "Sector":"Consumer Services", 	 "Industry":"Clothing/Shoe/Accessory Stores"},
       {"Symbol":"ZNGA", 	 "Name": "Zynga Inc.", 	 "Price": 2.24, 	 "MarketCap": 2020000000, 	 "IPO":2011, 		 "Sector":"Technology", 	 "Industry":"EDP Services"}
     ]);
-  },
+  }
 
-  filter: function(filterString, sortColumn, sortAscending, page, pageSize) {
+  filter(filterString, sortColumn, sortAscending, page, pageSize) {
     console.log("Filter: "+filterString);
 
     // Apply filters
@@ -1403,23 +1404,24 @@ var ExampleData = React.createClass({
       totalResults: totalResults,
       pageSize: pageSize
     };
-  },
+  }
 
-  getSymbolOptions: function() {
+  getSymbolOptions() {
     return this.db().distinct("Symbol");
-  },
+  }
 
-  getSectorOptions: function() {
+  getSectorOptions() {
     return this.db().distinct("Sector");
-  },
+  }
 
-  getIndustryOptions: function() {
+  getIndustryOptions() {
     return this.db().distinct("Industry");
-  },
+  }
 
-  render: function() {
+  render() {
     return (<div/>);
   }
-});
+}
 
-module.exports = ExampleData;
+// module.exports = ExampleData;
+export default ExampleData
